@@ -1,0 +1,118 @@
+﻿@page "/"
+@using Car_Rental.Business.Classes;
+@using Car_Rental.Common.Enums;
+@inject BookingProcessor bp;
+
+<PageTitle>Vehicles</PageTitle>
+
+
+<div class="container m-0">
+    <h2>Vehicles & availability</h2>
+    <div class="row border border-dark">
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th scope="col">RegNo</th>
+                    <th scope="col">Make</th>
+                    <th scope="col">Odometer</th>
+                    <th scope="col">Cost/Km</th>
+                    <th scope="col">Vehicle Type</th>
+                    <th scope="col">Price/Day</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var v in bp.GetVehicles())
+                {
+                    <tr>
+                        <td><strong>@v.RegNo</strong></td>
+                        <td>@v.Make</td>
+                        <td>@v.Odometer</td>
+                        <td>@v.KmPrice</td>
+                        <td>@v.VehicleType</td>
+                        <td>@v.DayPrice</td>
+                        <td>
+                            @if (v.VehicleStatus == VehicleStatuses.Booked)
+                            {
+                                <span class="badge bg-danger rounded-pill">@v.VehicleStatus</span>
+                            } else
+                            {
+                                <span class="badge bg-dark rounded-pill">@v.VehicleStatus</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Bookings</h2>
+    <div class="row">
+        <table class="table border border-dark">
+            <thead>
+                <tr>
+                    <th scope="col">RegNo</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Km Rented</th>
+                    <th scope="col">Km Returned</th>
+                    <th scope="col">Date Rented</th>
+                    <th scope="col">Date Returned</th>
+                    <th scope="col">Cost</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var b in bp.GetBookings())
+                {
+                    <tr>
+                        <td>@b.RegNo</td>
+                        <td>@b.Customer.LastName @b.Customer.FirstName (@b.Customer.SSN)</td>
+                        <td>@b.KmRented</td>
+                        <td>
+                            @(@b.BookingStatus == BookingStatus.Closed ? @b.KmReturned : null)
+                        </td>
+                        <td>@b.DateRented.ToShortDateString()</td>
+                        <td>@(@b.BookingStatus == BookingStatus.Closed ? @b.DateReturned.ToShortDateString() : null)</td>
+                        <td>@(@b.BookingStatus == BookingStatus.Closed ? @b.Cost : null)</td>
+                        <td>
+                            @if (b.BookingStatus == BookingStatus.Open)
+                            {
+                                <span class="badge bg-danger">@b.BookingStatus</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">@b.BookingStatus</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Customers</h2>
+    <div class="row">
+        <div class="col p-0">
+            <table class="table border border-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">SSN</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">First Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in bp.GetCustomers())
+                    {
+                        <tr>
+                            <td><strong>@c.SSN</strong></td>
+                            <td>@c.LastName</td>
+                            <td>@c.FirstName</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>

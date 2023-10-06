@@ -1,0 +1,32 @@
+[
+  {
+    "Id": 1,
+    "RegNo": "ABC123",
+    "Make": "Volvo",
+    "Odometer": 1,
+    "KmPrice": 1,
+    "VehicleType": "SUV",
+    "DayPrice": 1,
+    //"VehicleAvailability": true
+  },
+  {
+    "Id": 3,
+    "RegNo": "DEF456",
+    "Make": "Tesla",
+    "Odometer": 1,
+    "KmPrice": 1,
+    "VehicleType": "Sedan",
+    "DayPrice": 1,
+    //"VehicleAvailability": true
+  },
+  {
+    "Id": 5,
+    "RegNo": "GHI789",
+    "Make": "Volkswagen",
+    "Odometer": 1,
+    "KmPrice": 1,
+    "VehicleType": "Combi",
+    "DayPrice": 1,
+    //"VehicleAvailability": true
+  }
+]

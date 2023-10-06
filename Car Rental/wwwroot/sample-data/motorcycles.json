@@ -1,0 +1,32 @@
+[
+  {
+    "Id": 2,
+    "RegNo": "JKL012",
+    "Make": "Yamaha",
+    "Odometer": 1,
+    "KmPrice": 1,
+    "VehicleType": "Motorcycle",
+    "DayPrice": 1
+    //"VehicleAvailability": true
+  },
+  {
+    "Id": 4,
+    "RegNo": "MNO345",
+    "Make": "Honda",
+    "Odometer": 1,
+    "KmPrice": 1,
+    "VehicleType": "Motorcycle",
+    "DayPrice": 1
+    //"VehicleAvailability": true
+  },
+  {
+    "Id": 6,
+    "RegNo": "PQR678",
+    "Make": "Kawasaki",
+    "Odometer": 1,
+    "KmPrice": 1,
+    "VehicleType": "Motorcycle",
+    "DayPrice": 1
+    //"VehicleAvailability": true
+  }
+]

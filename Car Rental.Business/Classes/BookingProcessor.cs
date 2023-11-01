@@ -12,6 +12,7 @@ public class BookingProcessor
     private readonly IData _db;
     private readonly UserAddedInformation _uai;
     public bool IsTaskRunning { get; set; }
+    public string AlertMessage { get; set; }
 
     public BookingProcessor(IData db, UserAddedInformation uai)
     {
@@ -53,11 +54,13 @@ public class BookingProcessor
 
     public IBooking ReturnVehicle(int vehicleId, int kmReturned) 
     {
-        var vehicle = (Vehicle?)_db.Single<IVehicle>(v => v.Id == vehicleId) ?? throw new Exception();
-        var booking = _db.Single<IBooking>(b => b.RegNo == vehicle.RegNo) ?? throw new Exception();
+        var vehicle = (Vehicle?)_db.Single<IVehicle>(v => v.Id == vehicleId) ?? throw new Exception();       
         if (vehicle.Odometer > kmReturned)
-            throw new Exception($"Returned odometer ({kmReturned}) can not be greater than odometer at renting date. ");
-
+        {
+            AlertMessage = $"Returned odometer ({kmReturned}) can not be smaller than odometer ({vehicle.Odometer}) at renting date.";
+            return null;
+        }
+        var booking = _db.Single<IBooking>(b => b.RegNo == vehicle.RegNo) ?? throw new Exception();
         DateTime returnDate = DateTime.Now;
         int dateDifference = booking.DateRented.Duration(returnDate);
         double kmDifference = kmReturned - vehicle.Odometer;
@@ -73,12 +76,13 @@ public class BookingProcessor
 
     public void AddVehicle(string newRegNo, string newMake, int newOdometer, double newKmPrice, VehicleTypes newVehicleType, int newDayPrice)
     {
+
         int newId = _db.NextVehicleId;
-        _uai.NewRegNo = newRegNo;
-        _uai.NewMake = newMake;
-        _uai.NewOdometer = newOdometer;
-        _uai.NewKmPrice = newKmPrice;
-        _uai.NewVehicleType = newVehicleType;
+        if (newRegNo == null || newMake == null)
+        {
+            AlertMessage = "Could not add vehicle";
+            return;
+        }
         VehicleStatuses newVehicleStatus = VehicleStatuses.Available;
         
         if (newVehicleType == VehicleTypes.Motorcycle)
@@ -95,9 +99,11 @@ public class BookingProcessor
     public void AddCustomer(int newSsn, string newFirstName, string newLastName)
     {
         int newId = _db.NextPersonId;
-        _uai.NewSsn = newSsn;
-        _uai.NewFirstName = newFirstName;
-        _uai.NewLastName = newLastName;
+        if (newSsn == null || newFirstName == null || newLastName == null)
+        {
+            AlertMessage = "Could not add customer";
+            return;
+        }
         var item = new Customer(newId, newSsn, newFirstName, newLastName);
         _db.Add<IPerson>(item);
 

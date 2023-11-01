@@ -5,6 +5,14 @@
 @inject UserAddedInformation uai;
 
 <PageTitle>Car Rental Assignment - VG</PageTitle>
+
+@if (bp.AlertMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <strong>Error:</strong> @bp.AlertMessage
+    </div>
+}
+
 <div class="container m-0">
     <h2>Vehicles & availability</h2>
     <div class="row border border-dark">

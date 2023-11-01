@@ -5,6 +5,7 @@ namespace Car_Rental.Common.Classes;
 
 public class Booking : IBooking
 {
+    public int Id { get; set; }
     public string RegNo { get; set; }
     public Customer Customer { get; set; }
     public int KmRented { get; set; }
@@ -14,14 +15,15 @@ public class Booking : IBooking
     public double Cost { get; set; }
     public BookingStatus BookingStatus { get; set; }
 
-    public Booking(string regNo, Customer customer, int kmRented, int kmReturned, DateTime dateRented, DateTime dateReturned, BookingStatus bookingStatus)
+    public Booking(int id, string regNo, Customer customer, int kmRented, int kmReturned, DateTime dateRented, BookingStatus bookingStatus)
     {
+        Id = id;
         RegNo = regNo;
         Customer = customer;
         KmRented = kmRented;
         KmReturned = kmReturned;
         DateRented = dateRented;
-        DateReturned = dateReturned;
+        DateReturned = new DateTime();
         BookingStatus = bookingStatus;
     }
 
@@ -32,6 +34,5 @@ public class Booking : IBooking
         var dayDifference = (DateReturned - DateRented).TotalDays;
         var kmDifference = KmReturned - vehicle.Odometer;
         Cost = (dayDifference * vehicle.DayPrice) + (kmDifference * vehicle.KmPrice);
-
     }
 }

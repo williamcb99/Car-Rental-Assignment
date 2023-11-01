@@ -2,26 +2,50 @@
 @using Car_Rental.Business.Classes;
 @using Car_Rental.Common.Enums;
 @inject BookingProcessor bp;
+@inject UserAddedInformation uai;
 
-<PageTitle>Vehicles</PageTitle>
-
-
+<PageTitle>Car Rental Assignment - VG</PageTitle>
 <div class="container m-0">
     <h2>Vehicles & availability</h2>
     <div class="row border border-dark">
         <table class="table table-borderless">
-            <thead>
+            <thead class="table-dark">
                 <tr>
-                    <th scope="col">RegNo</th>
+                    <th class="col" scope="col">RegNo</th>
                     <th scope="col">Make</th>
                     <th scope="col">Odometer</th>
                     <th scope="col">Cost/Km</th>
                     <th scope="col">Vehicle Type</th>
                     <th scope="col">Price/Day</th>
+                    <th scope="col">Action</th>
                     <th scope="col">Status</th>
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <td><input disabled="@bp.IsTaskRunning" @bind="uai.NewRegNo" maxlength="6" type="text" placeholder="RegNo" /></td>
+                    <td><input disabled="@bp.IsTaskRunning" @bind="uai.NewMake" type="text" placeholder="Make" /></td>
+                    <td><input disabled="@bp.IsTaskRunning" @bind="uai.NewOdometer" type="text" placeholder="Odometer" /></td>
+                    <td><input disabled="@bp.IsTaskRunning" @bind="uai.NewKmPrice" type="text" placeholder="Cost/Km" /></td>
+                    <td>
+                        <select disabled="@bp.IsTaskRunning" @bind="uai.NewVehicleType" class="form-select-sm border-dark" aria-label="">
+                            <option></option>
+                            @foreach (var types in Enum.GetValues(typeof(VehicleTypes)))
+                            {
+                                <option value="@types">@types</option>
+                            }
+                        </select>
+
+                    </td>
+                    <td><input disabled="@bp.IsTaskRunning" @bind="uai.NewDayPrice" type="text" placeholder="Price/Day" /></td>
+                    <td><button disabled="@bp.IsTaskRunning" type="button" @onclick="(() => bp.AddVehicle(uai.NewRegNo, uai.NewMake, uai.NewOdometer, uai.NewKmPrice, uai.NewVehicleType, uai.NewDayPrice))" class="btn btn-outline-success">Add</button></td>
+                    <td>
+                        @if (bp.IsTaskRunning == true)
+                            {
+                                <span class="badge bg-warning rounded-pill">Processing</span>
+                            }
+                    </td>
+                </tr>
                 @foreach (var v in bp.GetVehicles())
                 {
                     <tr>
@@ -34,8 +58,31 @@
                         <td>
                             @if (v.VehicleStatus == VehicleStatuses.Booked)
                             {
+                                <div class="d-flex">
+                                    <input @bind="uai.NewKmReturned" class="border-dark m-1" type="text" placeholder="New Odometer" />
+                                    <button disabled="@bp.IsTaskRunning" @onclick="(() => bp.ReturnVehicle(v.Id, uai.NewKmReturned))" type="button" class="btn btn-outline-success">Return</button>
+                                </div>
+                            } 
+                            else
+                            {
+                                <div class="d-flex">
+                                    <select @bind="uai.CustomerId" class="form-select-sm border-dark m-1">
+                                        <option></option>
+                                        @foreach (var c in bp.GetCustomers())
+                                        {
+                                            <option value="@c.Id">@c.LastName @c.FirstName (@c.SSN)</option>
+                                        }
+                                    </select>
+                                    <button disabled="@bp.IsTaskRunning" type="button" @onclick="(() => bp.RentVehicle(v.Id, uai.CustomerId))" class="btn btn-outline-primary">Rent</button>
+                                </div>                    
+                            }
+                        </td>
+                        <td>
+                            @if (v.VehicleStatus == VehicleStatuses.Booked)
+                            {
                                 <span class="badge bg-danger rounded-pill">@v.VehicleStatus</span>
-                            } else
+                            } 
+                            else
                             {
                                 <span class="badge bg-dark rounded-pill">@v.VehicleStatus</span>
                             }
@@ -49,7 +96,7 @@
     <h2>Bookings</h2>
     <div class="row">
         <table class="table border border-dark">
-            <thead>
+            <thead class="table-dark">
                 <tr>
                     <th scope="col">RegNo</th>
                     <th scope="col">Customer</th>
@@ -94,20 +141,28 @@
     <div class="row">
         <div class="col p-0">
             <table class="table border border-dark">
-                <thead>
+                <thead class="table-dark">
                     <tr>
                         <th scope="col">SSN</th>
                         <th scope="col">Last Name</th>
                         <th scope="col">First Name</th>
+                        <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td><input @bind="uai.NewSsn" type="text" placeholder="SSN" /></td>
+                        <td><input @bind="uai.NewLastName" type="text" placeholder="Last Name" /></td>
+                        <td><input @bind="uai.NewFirstName" type="text" placeholder="First Name" /></td>
+                        <td><button type="button" @onclick="(() => bp.AddCustomer(uai.NewSsn, uai.NewFirstName, uai.NewLastName))" class="btn btn-outline-success">Add</button></td>
+                    </tr>
                     @foreach (var c in bp.GetCustomers())
                     {
                         <tr>
                             <td><strong>@c.SSN</strong></td>
                             <td>@c.LastName</td>
                             <td>@c.FirstName</td>
+                            <td></td>
                         </tr>
                     }
                 </tbody>

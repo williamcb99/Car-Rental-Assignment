@@ -3,17 +3,8 @@ using Car_Rental.Common.Interface;
 
 namespace Car_Rental.Common.Classes;
 
-public class Motorcycle : IVehicle
+public class Motorcycle : Vehicle
 {
-    public int Id { get; set; }
-    public string RegNo { get; set; }
-    public string Make { get; set; }
-    public int Odometer { get; set; }
-    public double KmPrice { get; set; }
-    public VehicleTypes VehicleType { get; set; }
-    public int DayPrice { get; set; }
-    public VehicleStatuses VehicleStatus { get; set; }
-
 	public Motorcycle(int id, string regNo, string make, int odometer, double kmPrice, VehicleTypes vehicleType, int dayPrice, VehicleStatuses vehicleStatus)
 	{
 		Id = id;
@@ -21,7 +12,7 @@ public class Motorcycle : IVehicle
 		Make = make;
 		Odometer = odometer;
 		KmPrice = kmPrice;
-		VehicleType = vehicleType;
+		VehicleType = VehicleTypes.Motorcycle;
 		DayPrice = dayPrice;
 		VehicleStatus = vehicleStatus;
 	}
